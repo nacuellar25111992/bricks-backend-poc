@@ -1,0 +1,305 @@
+{
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "Go microservice template for Kubernetes.",
+        "title": "Bricks Backend POC API",
+        "contact": {
+            "name": "Source Code",
+            "url": "https://github.com/nacuellar25111992/bricks-backend-poc"
+        },
+        "license": {
+            "name": "MIT License",
+            "url": "https://github.com/nacuellar25111992/bricks-backend-poc/blob/master/LICENSE"
+        },
+        "version": "2.0"
+    },
+    "host": "localhost:9898",
+    "basePath": "/",
+    "paths": {
+        "/api/info": {
+            "get": {
+                "description": "returns the runtime information",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "HTTP API"
+                ],
+                "summary": "Runtime information",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.RuntimeResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/env": {
+            "get": {
+                "description": "returns the environment variables as a JSON array",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "HTTP API"
+                ],
+                "summary": "Environment",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/healthz": {
+            "get": {
+                "description": "used by Kubernetes liveness probe",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Kubernetes"
+                ],
+                "summary": "Liveness check",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/readyz": {
+            "get": {
+                "description": "used by Kubernetes readiness probe",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Kubernetes"
+                ],
+                "summary": "Readiness check",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/readyz/disable": {
+            "post": {
+                "description": "signals the Kubernetes LB to stop sending requests to this instance",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Kubernetes"
+                ],
+                "summary": "Disable ready state",
+                "responses": {
+                    "202": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/readyz/enable": {
+            "post": {
+                "description": "signals the Kubernetes LB that this instance is ready to receive traffic",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Kubernetes"
+                ],
+                "summary": "Enable ready state",
+                "responses": {
+                    "202": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/token": {
+            "post": {
+                "description": "issues a JWT token valid for one minute",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "HTTP API"
+                ],
+                "summary": "Generate JWT token",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.TokenResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/token/validate": {
+            "post": {
+                "description": "validates the JWT token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "HTTP API"
+                ],
+                "summary": "Validate JWT token",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.TokenValidationResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/version": {
+            "get": {
+                "description": "returns bricks-backend-poc version and git commit hash",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "HTTP API"
+                ],
+                "summary": "Version",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.MapResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "api.MapResponse": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "string"
+            }
+        },
+        "api.RuntimeResponse": {
+            "type": "object",
+            "properties": {
+                "color": {
+                    "type": "string"
+                },
+                "goarch": {
+                    "type": "string"
+                },
+                "goos": {
+                    "type": "string"
+                },
+                "hostname": {
+                    "type": "string"
+                },
+                "logo": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "num_cpu": {
+                    "type": "string"
+                },
+                "num_goroutine": {
+                    "type": "string"
+                },
+                "revision": {
+                    "type": "string"
+                },
+                "runtime": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.TokenResponse": {
+            "type": "object",
+            "properties": {
+                "expires_at": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.TokenValidationResponse": {
+            "type": "object",
+            "properties": {
+                "expires_at": {
+                    "type": "string"
+                },
+                "token_name": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

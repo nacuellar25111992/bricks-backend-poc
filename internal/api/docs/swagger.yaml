@@ -1,0 +1,201 @@
+basePath: /
+definitions:
+  api.MapResponse:
+    additionalProperties:
+      type: string
+    type: object
+  api.RuntimeResponse:
+    properties:
+      color:
+        type: string
+      goarch:
+        type: string
+      goos:
+        type: string
+      hostname:
+        type: string
+      logo:
+        type: string
+      message:
+        type: string
+      num_cpu:
+        type: string
+      num_goroutine:
+        type: string
+      revision:
+        type: string
+      runtime:
+        type: string
+      version:
+        type: string
+    type: object
+  api.TokenResponse:
+    properties:
+      expires_at:
+        type: string
+      token:
+        type: string
+    type: object
+  api.TokenValidationResponse:
+    properties:
+      expires_at:
+        type: string
+      token_name:
+        type: string
+    type: object
+host: localhost:9898
+info:
+  contact:
+    name: Source Code
+    url: https://github.com/nacuellar25111992/bricks-backend-poc
+  description: Go microservice template for Kubernetes.
+  license:
+    name: MIT License
+    url: https://github.com/nacuellar25111992/bricks-backend-poc/blob/master/LICENSE
+  title: Bricks Backend POC API
+  version: "2.0"
+paths:
+  /api/info:
+    get:
+      consumes:
+      - application/json
+      description: returns the runtime information
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.RuntimeResponse'
+      summary: Runtime information
+      tags:
+      - HTTP API
+  /env:
+    get:
+      consumes:
+      - application/json
+      description: returns the environment variables as a JSON array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Environment
+      tags:
+      - HTTP API
+  /healthz:
+    get:
+      consumes:
+      - application/json
+      description: used by Kubernetes liveness probe
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Liveness check
+      tags:
+      - Kubernetes
+  /readyz:
+    get:
+      consumes:
+      - application/json
+      description: used by Kubernetes readiness probe
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Readiness check
+      tags:
+      - Kubernetes
+  /readyz/disable:
+    post:
+      consumes:
+      - application/json
+      description: signals the Kubernetes LB to stop sending requests to this instance
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: OK
+          schema:
+            type: string
+      summary: Disable ready state
+      tags:
+      - Kubernetes
+  /readyz/enable:
+    post:
+      consumes:
+      - application/json
+      description: signals the Kubernetes LB that this instance is ready to receive
+        traffic
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: OK
+          schema:
+            type: string
+      summary: Enable ready state
+      tags:
+      - Kubernetes
+  /token:
+    post:
+      consumes:
+      - application/json
+      description: issues a JWT token valid for one minute
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.TokenResponse'
+      summary: Generate JWT token
+      tags:
+      - HTTP API
+  /token/validate:
+    post:
+      consumes:
+      - application/json
+      description: validates the JWT token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.TokenValidationResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      summary: Validate JWT token
+      tags:
+      - HTTP API
+  /version:
+    get:
+      description: returns bricks-backend-poc version and git commit hash
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.MapResponse'
+      summary: Version
+      tags:
+      - HTTP API
+schemes:
+- http
+- https
+swagger: "2.0"
